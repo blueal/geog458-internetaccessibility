@@ -1,4 +1,11 @@
 # Internet Access in Washington State
+[blueal.github.io/geog458-groupfinal/](blueal.github.io/geog458-groupfinal)
+
+## Group Members
+* Alex Friedberg (blueal)
+* Nichapa Lertviwatkul (nlertv)
+* Holden Bailey (Synometry)
+* Vincent Le (vinceleuw)
 
 ## Project Proposal and Significance
 
