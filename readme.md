@@ -6,6 +6,7 @@
 * Nichapa Lertviwatkul (nlertv)
 * Holden Bailey (Synometry)
 * Vincent Le (vinceleuw)
+* Ali Basbeth (LostGovernment)
 
 ## Project Proposal and Significance
 
