@@ -1,5 +1,5 @@
 # Internet Access in Washington State
-[blueal.github.io/geog458-groupfinal](https://blueal.github.io/geog458-groupfinal/)
+[blueal.github.io/geog458-internetaccessibility](https://blueal.github.io/geog458-internetaccessibility/)
 
 ## Group Members
 * Alex Friedberg (blueal)
