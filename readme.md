@@ -14,7 +14,7 @@ We, group AA2, will be researching and analyzing internet accessibility for our 
 
 We have decided to narrow down our studies in King County. We are trying to make a distinction between the rural and the urban areas' internet access.  
 
-![Map1](./img/provider.png)
+![Map1](./img/page.png)
 
 ## Target Audience
 
@@ -23,7 +23,7 @@ Our target audience is therefore two-fold. The media we create will serve commun
 ## Primary Functions
 
 To accomplish these goals, we will make an interactive web map by the end of the quarter. It will afford the sort of interaction one typically finds with these kinds of maps: panning, zooming, selection of geographic units (state, census tract, etc.), among others. This map will depict the geographic distribution of internet access. Because “internet access” is a rather high-level variable – a purely quantitative or qualitative representation would not perfectly encapsulate it – we will be settling for a stand-in variable, “fastest available internet speed”, which we feel is the best available for the scope of this assignment. We want to display this through generic digital geographies with a monochrome base map from MapBox. We will be zooming in and centering on Washington State with Mercator projection. For the thematic layer, we plan to use choropleth maps with the data from querying https://opendata.fcc.gov/resource/hicn-aujz.csvLinks to an external site.. Most of our data is vector data with data attributes such as, max advertized service speed, blockid, and count. 
-![Map](./img/downloadspeed.png)
+![Map](./img/maps.png)
 
 To contextualize our data, we plan on having an adjacent, introductory webpage. This webpage will feature some of the highlights of our research into the topic of internet accessibility, namely excerpts from a Vice article located hereLinks to an external site. and snapshots from the FCC’s own map of broadband data. 
 
