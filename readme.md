@@ -13,7 +13,8 @@
 We, group AA2, will be researching and analyzing internet accessibility for our final project. Access to the internet is foundational for participating in modern America, yet it is not equal in all parts of the country. This can be seen most easily in many rural towns that are disregarded by the various internet service providers (ISPs) such as Comcast, Century Link, etc. We plan to produce a resource that highlights significant patterns in the distribution of internet access to draw attention to the issue and educate the public. Additionally, locales with sub-par internet access represent potential customers for ISPs. 
 
 We have decided to narrow down our studies in King County. We are trying to make a distinction between the rural and the urban areas' internet access.  
-![Map1](/assets/img/provider.png)
+
+![Map1](.img/provider.png)
 
 ## Target Audience
 
@@ -22,7 +23,7 @@ Our target audience is therefore two-fold. The media we create will serve commun
 ## Primary Functions
 
 To accomplish these goals, we will make an interactive web map by the end of the quarter. It will afford the sort of interaction one typically finds with these kinds of maps: panning, zooming, selection of geographic units (state, census tract, etc.), among others. This map will depict the geographic distribution of internet access. Because “internet access” is a rather high-level variable – a purely quantitative or qualitative representation would not perfectly encapsulate it – we will be settling for a stand-in variable, “fastest available internet speed”, which we feel is the best available for the scope of this assignment. We want to display this through generic digital geographies with a monochrome base map from MapBox. We will be zooming in and centering on Washington State with Mercator projection. For the thematic layer, we plan to use choropleth maps with the data from querying https://opendata.fcc.gov/resource/hicn-aujz.csvLinks to an external site.. Most of our data is vector data with data attributes such as, max advertized service speed, blockid, and count. 
-![Map](/assets/img/downloadspeed.png)
+![Map](.img/downloadspeed.png)
 
 To contextualize our data, we plan on having an adjacent, introductory webpage. This webpage will feature some of the highlights of our research into the topic of internet accessibility, namely excerpts from a Vice article located hereLinks to an external site. and snapshots from the FCC’s own map of broadband data. 
 
