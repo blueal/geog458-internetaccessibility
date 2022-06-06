@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Internet Providers in King County</title>
+    <title>Max Internet Speeds in King County</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
@@ -15,10 +15,10 @@
     <div id="map"></div>
     <div id="legend"></div>
     <div id="title">
-        Number of Internet Providers in King County (2020)
+        Max Download Speeds in King County (2020)
     </div>
     <div id="subtitle">
-        Internet service provider count by 2010 US Census blocks
+        Max Download Speeds by 2010 US Census blocks
     </div>
     <script>
         mapboxgl.accessToken =
@@ -33,8 +33,8 @@
             }
         });
 
-        const rates = [5, 15, 25],
-            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)']
+        const rates = [50, 100, 250, 1000],
+            colors = ['rgb(215,25,28)', 'rgb(253,174,97)', 'rgb(171,217,233)', 'rgb(44,123,182)']
 
         //load data to the map as new layers.
         //map.on('load', function loadingData() {
@@ -48,12 +48,12 @@
             });
 
             map.addLayer({
-                    'id': 'provider-counts',
+                    'id': 'internet-speeds',
                     'type': 'fill',
                     'source': 'providers',
                     'paint': {
                         'fill-color': {
-                            'property': 'provider_c',
+                            'property': 'max_downlo',
                             'stops': [
                                 [rates[0], colors[0]],
                                 [rates[1], colors[1]],
@@ -61,7 +61,7 @@
                             ]
                         },
                         'fill-outline-color': '#BBBBBB',
-                        'fill-opacity': 0.7,
+                        'fill-opacity': 0.5,
                     }
                 },
                 'waterway-label'
@@ -69,10 +69,10 @@
 
 
             // click on tree to view Covid counts in a popup
-            map.on('click', 'provider-counts', (event) => {
+            map.on('click', 'internet-speeds', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.lngLat)
-                    .setHTML(`<strong>Number of internet providers:</strong> ${event.features[0].properties.provider_c}`)
+                    .setHTML(`<strong>Max download speed:</strong> ${event.features[0].properties.max_downlo}`)
                     .addTo(map);
             });
 
@@ -83,7 +83,7 @@
         const legend = document.getElementById('legend');
 
         //set up legend grades and labels
-        var labels = ['<strong>Number of Internet Providers</strong>'],
+        var labels = ['<strong>Max Download Speeds</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < rates.length; i++) {
