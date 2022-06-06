@@ -2,233 +2,109 @@
 <html>
 
 <head>
-    <title>Map Visualizations 1</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Internet Providers in King County</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-        }
-        
-        #menu {
-            background: #fff;
-            position: absolute;
-            z-index: 1;
-            top: 10px;
-            right: 10px;
-            border-radius: 3px;
-            width: 150px;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            font-family: 'Open Sans', sans-serif;
-        }
-        
-        #menu a {
-            font-size: 13px;
-            color: #404040;
-            display: block;
-            margin: 0;
-            padding: 0;
-            padding: 10px;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-            text-align: center;
-            text-transform: uppercase;
-        }
-        
-        #menu a:last-child {
-            border: none;
-        }
-        /* change color and background color while a pointer is on an hybrid link. */
-        
-        #menu a:hover {
-            background-color: #f8f8f8;
-            color: #404040;
-        }
-        
-        #menu a.active {
-            background-color: #3887be;
-            color: #ffffff;
-        }
-        
-        #menu a.active:hover {
-            background: #3074a4;
-        }
-        
-        .map-overlay {
-            font: bold 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            position: absolute;
-            width: 20%;
-            top: 0;
-            left: 0;
-            padding: 50px;
-        }
-        
-        .map-overlay .map-overlay-inner {
-            background-color: rgb(131, 131, 131);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .map-overlay label {
-            display: block;
-            margin: 0 0 10px;
-        }
-        
-        .map-overlay input {
-            background-color: transparent;
-            display: inline-block;
-            width: 100%;
-            position: relative;
-            margin: 0;
-            cursor: ew-resize;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
 </head>
 
 <body>
-
-
-    <nav id="menu"></nav>
-    <div id='map'></div>
-
-    <div class="map-overlay top">
-        <div class="map-overlay-inner">
-            <h1>Internet Accessibility in King County (2020)</h1>
-            <h2>2020 Number of service providers and maximum download speeds by 2010 US Census blocks</h2>
-        </div>
-        <div class="map-overlay-inner">
-            <label>Adjust Opacity <span id="slider-value"></span></label>
-            <input id="slider" type="range" min="0" max="100" step="0" value="100">
-        </div>
+    <div id="map"></div>
+    <div id="legend"></div>
+    <div id="title">
+        Number of Internet Providers in King County (2020)
     </div>
-
-    <script type="text/javascript">
+    <div id="subtitle">
+        Internet service provider count by 2010 US Census blocks
+    </div>
+    <script>
         mapboxgl.accessToken =
-            'pk.eyJ1IjoiYWxpYmFzYmV0aCIsImEiOiJjbDJ2ZnhzcGcwYjZ4M2pvYm5taWMydG8yIn0.QdMM73bOrvPuf106ax5Xaw';
+            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/dark-v10',
-            zoom: 8, // starting zoom
-            center: [-120.7401, 47.7511] // starting center
+            zoom: 9, // starting zoom
+            center: [-122, 47.5], // starting center
+            projection: {
+                name: 'mercator'
+            }
         });
 
-        const slider = document.getElementById('slider');
-        const sliderValue = document.getElementById('slider-value');
+        const rates = [5, 15, 25],
+            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)']
 
+        //load data to the map as new layers.
+        //map.on('load', function loadingData() {
         map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
 
-            map.addSource('broadband-tiles', {
-                'type': 'raster',
-                'tiles': [
-                    'assets/visualitions_broadband1/{z}/{x}/{y}.png'
-                ],
-                'tileSize': 256,
-                'attribution': 'Map Visualizations 1 </a>'
+            // when loading a geojson, there are two steps
+            // add a source of the data and then add the layer out of the source
+            map.addSource('providers', {
+                type: 'geojson',
+                data: 'assets/IntAccessShape.json'
             });
 
             map.addLayer({
-                'id': 'broadband-layer',
-                'type': 'raster',
-                'layout': {
-                    'visibility': 'none'
+                    'id': 'provider-counts',
+                    'type': 'fill',
+                    'source': 'providers',
+                    'paint': {
+                        'fill-color': {
+                            'property': 'provider_c',
+                            'stops': [
+                                [rates[0], colors[0]],
+                                [rates[1], colors[1]],
+                                [rates[2], colors[2]]
+                            ]
+                        },
+                        'fill-outline-color': '#BBBBBB',
+                        'fill-opacity': 0.7,
+                    }
                 },
-                'source': 'broadband-tiles'
+                'waterway-label'
+            );
+
+
+            // click on tree to view Covid counts in a popup
+            map.on('click', 'provider-counts', (event) => {
+                new mapboxgl.Popup()
+                    .setLngLat(event.lngLat)
+                    .setHTML(`<strong>Number of internet providers:</strong> ${event.features[0].properties.provider_c}`)
+                    .addTo(map);
             });
 
-            map.addControl(new mapboxgl.NavigationControl(), "top-left");
-
         });
 
 
-        // After the last frame rendered before the map enters an "idle" state.
-        map.on('idle', () => {
-            // If these two layers were not added to the map, abort
-            if (!map.getLayer('broadband-layer')) {
-                return;
-            }
+        // create legend
+        const legend = document.getElementById('legend');
 
-            // Enumerate ids of the layers.
-            const toggleableLayerIds = ['broadband-layer'];
+        //set up legend grades and labels
+        var labels = ['<strong>Number of Internet Providers</strong>'],
+            vbreak;
+        //iterate through grades and create a scaled circle and label for each
+        for (var i = 0; i < rates.length; i++) {
+            vbreak = rates[i];
+            // you need to manually adjust the radius of each dot on the legend 
+            // in order to make sure the legend can be properly referred to the dot on the map.
+            dot_radii = 30;
+            labels.push(
+                '<p class="break"><i class="dot" style="background:' + colors[i] + '; width: ' + dot_radii +
+                'px; height: ' +
+                dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
+                '</span></p>');
 
-            // Set up the corresponding toggle button for each layer.
-            for (const id of toggleableLayerIds) {
-                // Skip layers that already have a button set up.
-                if (document.getElementById(id)) {
-                    continue;
-                }
-
-                // Create a link.
-                const link = document.createElement('a');
-                link.id = id;
-                link.href = '#';
-                link.textContent = id;
-                link.className = 'inactive';
-
-                // Show or hide layer when the toggle is clicked.
-                link.onclick = function(e) {
-                    const clickedLayer = this.textContent;
-                    // preventDefault() tells the user agent that if the event does not get explicitly handled, 
-                    // its default action should not be taken as it normally would be.
-                    e.preventDefault();
-                    // The stopPropagation() method prevents further propagation of the current event in the capturing 
-                    // and bubbling phases. It does not, however, prevent any default behaviors from occurring; 
-                    // for instance, clicks on links are still processed. If you want to stop those behaviors, 
-                    // see the preventDefault() method.
-                    e.stopPropagation();
-
-                    const visibility = map.getLayoutProperty(
-                        clickedLayer,
-                        'visibility'
-                    );
-
-                    // Toggle layer visibility by changing the layout object's visibility property.
-                    // if it is currently visible, after the clicking, it will be turned off.
-                    if (visibility === 'visible') {
-                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                        this.className = '';
-                    } else { //otherise, it will be turned on.
-                        this.className = 'active';
-                        map.setLayoutProperty(
-                            clickedLayer,
-                            'visibility',
-                            'visible'
-                        );
-                    }
-
-                    slider.addEventListener('input', (e) => {
-                        // Adjust the layers opacity. layer here is arbitrary - this could
-                        // be another layer name found in your style or a custom layer
-                        // added on the fly using `addSource`.
-                        map.setPaintProperty(
-                            clickedLayer,
-                            'raster-opacity',
-                            parseInt(e.target.value, 10) / 100
-                        );
-
-                        // Value indicator
-                        sliderValue.textContent = e.target.value + '%';
-                    });
-                };
-
-                // in the menu place holder, insert the layer links.
-                const layers = document.getElementById('menu');
-                layers.appendChild(link);
-            }
-        });
+        }
+        // add the data source
+        const source =
+            '<p style="text-align: right; font-size:10pt">Source: Federal Communications Comissions</p>';
+        // combine all the html codes.
+        legend.innerHTML = labels.join('') + source;
     </script>
+
 </body>
 
 </html>
