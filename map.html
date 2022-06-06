@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Internet Providers in King County</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+    <nav id="menu"></nav>
+    <div id='map'></div>
+
+    <div class="map-overlay top">
+        <div class="map-overlay-inner">
+            <label>Adjust Opacity <span id="slider-value"></span></label>
+            <input id="slider" type="range" min="0" max="100" step="0" value="100">
+        </div>
+    </div>
+    <div id="subtitle">
+        Internet service provider count by 2010 US Census blocks
+    </div>
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+        let map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/dark-v10',
+            zoom: 9, // starting zoom
+            center: [-122, 47.5], // starting center
+            projection: {
+                name: 'mercator'
+            }
+        });
+
+        const rates = [5, 15, 25],
+            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)']
+
+        //load data to the map as new layers.
+        //map.on('load', function loadingData() {
+        map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
+
+            // when loading a geojson, there are two steps
+            // add a source of the data and then add the layer out of the source
+            map.addSource('providers', {
+                type: 'geojson',
+                data: 'assets/IntAccessShape.json'
+            });
+
+            map.addLayer({
+                    'id': 'provider-counts',
+                    'type': 'fill',
+                    'source': 'providers',
+                    'paint': {
+                        'fill-color': {
+                            'property': 'provider_c',
+                            'stops': [
+                                [rates[0], colors[0]],
+                                [rates[1], colors[1]],
+                                [rates[2], colors[2]]
+                            ]
+                        },
+                        'fill-outline-color': '#BBBBBB',
+                        'fill-opacity': 0.7,
+                    }
+                },
+                'waterway-label'
+            );
+
+
+            // click on tree to view Covid counts in a popup
+            map.on('click', 'provider-counts', (event) => {
+                new mapboxgl.Popup()
+                    .setLngLat(event.lngLat)
+                    .setHTML(`<strong>Number of internet providers:</strong> ${event.features[0].properties.provider_c}`)
+                    .addTo(map);
+            });
+
+        });
+
+
+        // create legend
+        const legend = document.getElementById('legend');
+
+        //set up legend grades and labels
+        var labels = ['<strong>Number of Internet Providers</strong>'],
+            vbreak;
+        //iterate through grades and create a scaled circle and label for each
+        for (var i = 0; i < rates.length; i++) {
+            vbreak = rates[i];
+            // you need to manually adjust the radius of each dot on the legend 
+            // in order to make sure the legend can be properly referred to the dot on the map.
+            dot_radii = 30;
+            labels.push(
+                '<p class="break"><i class="dot" style="background:' + colors[i] + '; width: ' + dot_radii +
+                'px; height: ' +
+                dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
+                '</span></p>');
+
+        }
+        // add the data source
+        const source =
+            '<p style="text-align: right; font-size:10pt">Source: Federal Communications Comissions</p>';
+        // combine all the html codes.
+        legend.innerHTML = labels.join('') + source;
+    </script>
+
+</body>
+
+</html>

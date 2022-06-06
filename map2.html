@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Max Internet Speeds in King County</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="legend"></div>
+    <div id="title">
+        Max Download Speeds in King County Blocks
+    </div>
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+        let map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/dark-v10',
+            zoom: 9, // starting zoom
+            center: [-122, 47.5], // starting center
+            projection: {
+                name: 'mercator'
+            }
+        });
+
+        const rates = [50, 100, 250, 1000],
+            colors = ['rgb(215,25,28)', 'rgb(253,174,97)', 'rgb(171,217,233)', 'rgb(44,123,182)']
+
+        //load data to the map as new layers.
+        //map.on('load', function loadingData() {
+        map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
+
+            // when loading a geojson, there are two steps
+            // add a source of the data and then add the layer out of the source
+            map.addSource('providers', {
+                type: 'geojson',
+                data: 'assets/IntAccessShape.json'
+            });
+
+            map.addLayer({
+                    'id': 'internet-speeds',
+                    'type': 'fill',
+                    'source': 'providers',
+                    'paint': {
+                        'fill-color': {
+                            'property': 'max_downlo',
+                            'stops': [
+                                [rates[0], colors[0]],
+                                [rates[1], colors[1]],
+                                [rates[2], colors[2]]
+                            ]
+                        },
+                        'fill-outline-color': '#BBBBBB',
+                        'fill-opacity': 0.5,
+                    }
+                },
+                'waterway-label'
+            );
+
+
+            // click on tree to view Covid counts in a popup
+            map.on('click', 'internet-speeds', (event) => {
+                new mapboxgl.Popup()
+                    .setLngLat(event.lngLat)
+                    .setHTML(`<strong>Max download speed:</strong> ${event.features[0].properties.max_downlo}`)
+                    .addTo(map);
+            });
+
+        });
+
+
+        // create legend
+        const legend = document.getElementById('legend');
+
+        //set up legend grades and labels
+        var labels = ['<strong>Max Download Speeds</strong>'],
+            vbreak;
+        //iterate through grades and create a scaled circle and label for each
+        for (var i = 0; i < rates.length; i++) {
+            vbreak = rates[i];
+            // you need to manually adjust the radius of each dot on the legend 
+            // in order to make sure the legend can be properly referred to the dot on the map.
+            dot_radii = 30;
+            labels.push(
+                '<p class="break"><i class="dot" style="background:' + colors[i] + '; width: ' + dot_radii +
+                'px; height: ' +
+                dot_radii + 'px; "></i> <span class="dot-label" style="top: ' + dot_radii / 2 + 'px;">' + vbreak +
+                '</span></p>');
+
+        }
+        // add the data source
+        const source =
+            '<p style="text-align: right; font-size:10pt">Source: Federal Communications Comissions</p>';
+        // combine all the html codes.
+        legend.innerHTML = labels.join('') + source;
+    </script>
+
+</body>
+
+</html>
