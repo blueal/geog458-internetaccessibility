@@ -1,23 +1,21 @@
-#title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin-top: 20px;
-    margin-left: 20px;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 25pt;
-    color: white
-}
-
+#title,
 #subtitle {
     position: absolute;
     top: 0;
     left: 0;
-    margin-top: 70px;
     margin-left: 20px;
     font-family: 'Open Sans', sans-serif;
-    font-size: 15pt;
     color: white
+}   
+
+#title {
+    margin-top: 50px;
+    font-size: 25pt;
+}
+
+#subtitle {
+    margin-top: 90px;
+    font-size: 15pt;
 }
 
 body {
@@ -45,22 +43,6 @@ body {
     border-radius: 3px;
     text-align: center;
     font-family: 'Open Sans', sans-serif;
-}
-
-/* the layout of the 'back' button */
-#back-button {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 90px;
-    background: #fff;
-    margin-left: 20px;
-    margin-bottom: 40px;
-    padding: 10px;
-    border-radius: 3px;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
-    font-size: small;
 }
 
 /* each line for a break */
