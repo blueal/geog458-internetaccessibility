@@ -47,6 +47,22 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+/* the layout of the 'back' button */
+#back-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 90px;
+    background: #fff;
+    margin-left: 20px;
+    margin-bottom: 40px;
+    padding: 10px;
+    border-radius: 3px;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: small;
+}
+
 /* each line for a break */
 .break {
     position: relative;
